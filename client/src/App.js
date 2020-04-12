@@ -39,7 +39,7 @@ class App extends Component {
       })
           .then(res => res.json())
           .then(res => res = Object.values(res))
-          .then(res => this.setState({ messages: res })) 
+          .then(res => this.setState({ messages: res, done:true})) 
     }
 
     logIn(){
@@ -57,9 +57,11 @@ class App extends Component {
 
             if(res == "1"){
               this.setState({isSeller:true});
+              alert("sei un venditore");
               this.getMessages();
             }else{
               this.setState({isSeller:false});
+              alert("sei un compratore");
               this.getRestaurants();
             }
             
@@ -78,7 +80,7 @@ class App extends Component {
           method: 'post',
           headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
           body : "name=" + this.refs.uname.value +
-                 "&isSeller=" + this.refs.cb.value.toString() +
+                 "&isSeller=" + this.refs.cb.checked.toString()+
                  "&password=" + this.refs.psw.value
         })
         .then(res => res.text())
@@ -105,7 +107,7 @@ class App extends Component {
           </header>
           {
             this.state.init ?
-            this.state.login ?
+            (this.state.login ?
             <div>
               <form onSubmit={(event) => {
                 event.preventDefault()
@@ -140,8 +142,8 @@ class App extends Component {
               </form>
                     
             </div>
-            :
-            !this.state.isSeller ? 
+            ):
+            (!this.state.isSeller ? 
             <div>
             {
               this.state.done ?
@@ -158,9 +160,8 @@ class App extends Component {
               :
               <p>IN CARICAMENTO...</p>
             }
-            </div>
+            </div>)
           }
-          
           
         </div>
             

@@ -61,7 +61,6 @@ con.connect(function(err) {
 }); 
 
 router.post('/login',function(req,res){
-    console.log(req.body);
     con.query("SELECT seller FROM accounts WHERE username = '"+req.body["name"]+"' AND password = '"+req.body["password"] +"'",(err,result) => {
         if(err){
             res.send("error");
@@ -78,11 +77,10 @@ router.post('/login',function(req,res){
 });
 
 router.post('/signin',function(req,res){
-    console.log(req.body);
-    console.log(req.body["isSeller"].toString());
     let sell = "false";
 
-    if(req.body["isSeller"].toString() == "on"){
+    console.log(req.body["isSeller"]);
+    if(req.body["isSeller"].toString() == "true"){
         sell = "true";
     }else{
         sell = "false";
@@ -92,9 +90,8 @@ router.post('/signin',function(req,res){
     let sql = "INSERT INTO accounts(username,password,seller) VALUES("+str+")";
     con.query(sql,(err) => {
         if(err){
-            console.log(err);
             res.send("error");
-            return;
+            throw err;
         }
 
         res.send("good");
@@ -121,7 +118,6 @@ router.get('/getRestaurants', function(req, res, next) {
 });
 
 router.post('/getMessages', function(req, res) {
-    console.log(req.body);
     con.query("SELECT id,sender,orders,complete FROM messages WHERE recipient = '"+req.body["username"]+"'",(err,result)=>{
         if(err) throw err;
         let r = [];
@@ -144,7 +140,6 @@ router.get('/getMenus', function(req, res, next) {
             }else{
                 r[result[i]["restaurant"]] = [[result[i]["dish"],result[i]["price"]]];
             }
-            console.log(JSON.stringify(r));
         }
         res.send(r);
     });
