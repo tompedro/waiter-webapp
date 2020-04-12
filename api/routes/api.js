@@ -57,6 +57,11 @@ con.connect(function(err) {
             if(err) throw err;
             console.log("Table created");
         });
+
+        con.query("CREATE TABLE IF NOT EXISTS restaurants(id INT AUTO_INCREMENT PRIMARY KEY, username VARCHAR(255), restaurant VARCHAR(255));",(err)=>{
+            if(err) throw err;
+            console.log("Table created");
+        });
     });
 }); 
 
@@ -93,9 +98,15 @@ router.post('/signin',function(req,res){
             res.send("error");
             throw err;
         }
-
         res.send("good");
-    }); 
+    });
+
+    con.query("INSERT INTO restaurants(username,restaurant) VALUES('"+req.body["name"] + "','" + req.body["restname"]+"')",(err)=>{
+        if(err){
+            console.log("error at restaurants");
+            throw err;
+        }
+    });
 });
 
 router.get('/', function(req, res, next) {
@@ -143,6 +154,36 @@ router.get('/getMenus', function(req, res, next) {
         }
         res.send(r);
     });
+});
+
+router.post('/order',(req,res)=>{
+    let id, username;
+    con.query("SELECT id FROM menus WHERE restaurant = '"+req.body["rest"]+"' AND dish = '"+req.body["dish"] +"'",(err,result)=>{
+        if(err) {res.send("error");throw err;}
+
+        console.log(result);
+        console.log(result[0]["id"]);
+        id = result[0]["id"].toString();
+
+        con.query("SELECT username FROM restaurants WHERE restaurant = '"+req.body["rest"]+"'",(err,result)=>{
+            if(err) {res.send("error");throw err;}
+    
+            console.log(result);
+            console.log(result[0]["username"])
+            username = result[0]["username"];
+
+            let str = "'" + req.body["user"] + "','" + username + "','" + id + "',false";
+            con.query("INSERT INTO messages(sender,recipient,orders,complete) VALUES("+str+")",(err,result)=>{
+                if(err) {res.send("error");throw err;}
+                
+                res.send("aposto");
+                console.log("tutto ok");
+            });
+        });
+    });
+    console.log(req.body["rest"])
+    
+    
 });
 
 module.exports = router;

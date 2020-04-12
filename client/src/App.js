@@ -14,6 +14,16 @@ class App extends Component {
       this.logIn = this.logIn.bind(this);
       this.signIn = this.signIn.bind(this);
       this.getMessages = this.getMessages.bind(this);
+      this.order = this.order.bind(this);
+    }
+
+    order(rest_name,dish_name){
+      fetch("http://localhost:3000/api/order",{
+        method: 'post',
+        headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+        body : "dish="+dish_name.toString() + "&rest="+rest_name.toString() + "&user=" + this.state.username
+      }).then(res => res.text())
+        .then(res => alert(res))
     }
 
     getRestaurants() {
@@ -81,7 +91,8 @@ class App extends Component {
           headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
           body : "name=" + this.refs.uname.value +
                  "&isSeller=" + this.refs.cb.checked.toString()+
-                 "&password=" + this.refs.psw.value
+                 "&password=" + this.refs.psw.value+
+                 "&restname=" + this.refs.restname.value
         })
         .then(res => res.text())
         .then(res => alert(res))
@@ -135,9 +146,12 @@ class App extends Component {
                   <label for="psw"><b>Password</b></label>
                   <input style = {{width : "133%"}}className = "form-control" type="password" placeholder="Enter Password" ref="psw"/>
 
-                  <label for="psw"><b>Are you a seller?</b></label>
+                  <label for="isSeller"><b>Are you a seller?</b></label>
                   <input style = {{width : "133%"}} className = "form-control" type="checkbox" ref="cb"/>
 
+                  <label for="uname"><b>Name of Restaurant</b></label>
+                  <input style = {{width : "133%"}}className = "form-control" type="text" placeholder="Enter Name" ref="restname"/>
+              
                   <button type="submit" className="btn btn-primary" >Sign In</button>
               </form>
                     
@@ -147,7 +161,7 @@ class App extends Component {
             <div>
             {
               this.state.done ?
-              <Main restaurants = {this.state.restaurants} menus = {this.state.menus}/>
+              <Main restaurants = {this.state.restaurants} order = {this.order} menus = {this.state.menus}/>
               :
               <p>IN CARICAMENTO...</p>
             }
@@ -156,7 +170,7 @@ class App extends Component {
             <div>
             {
               this.state.done ?
-              <Seller messages = {this.state.messages}/>
+              <Seller messages = {this.state.messages} />
               :
               <p>IN CARICAMENTO...</p>
             }

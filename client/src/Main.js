@@ -6,12 +6,15 @@ class Main extends Component {
     return (
         <div>
         {
-          this.props.restaurants.map((a,b)=>
+          this.props.restaurants.map((rest_name,rest_index)=>
             <div>
-            <p>{a}</p>
+            <p>{rest_name}</p>
             {
-              this.props.menus[this.props.restaurants[b]].map((a,b)=>
-                <p>{a[0]} : {a[1]}</p>
+              this.props.menus[this.props.restaurants[rest_index]].map((dish_info,dish_index)=>
+                <div>
+                  <p>{dish_info[0]} : {dish_info[1]}</p>
+                  <button onClick={(event) => this.props.order(rest_name,dish_info[0])}>ORDER!</button>
+                </div>
               )
             }
             </div>
