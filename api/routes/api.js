@@ -44,14 +44,6 @@ con.connect(function(err) {
         con.query("CREATE TABLE IF NOT EXISTS menus(id INT AUTO_INCREMENT PRIMARY KEY, restaurant VARCHAR(255), dish VARCHAR(255), price VARCHAR(255));",(err)=>{
             if(err) throw err;
             console.log("Table created");
-            con.query("DELETE FROM menus;",(err)=>{
-                if(err) throw err;
-                //prove
-                insertRows("'Ristorante1','Piatto1',23");
-                insertRows("'Ristorante1','Piatto2',21");
-                insertRows("'Ristorante2','Piatto1',11");
-                insertRows("'Ristorante2','Piatto2',10");
-            });
         });
         con.query("CREATE TABLE IF NOT EXISTS messages(id INT AUTO_INCREMENT PRIMARY KEY, sender VARCHAR(255), recipient VARCHAR(255), orders VARCHAR(255), complete BOOLEAN);",(err)=>{
             if(err) throw err;
@@ -76,8 +68,9 @@ router.post('/login',function(req,res){
             res.send("error");
             return;
         }
+        console.log(result);
         console.log(result[0].seller);
-        res.send(result[0].seller.toString());
+        res.send(req.body["name"] + result[0].seller.toString());
     });
 });
 
@@ -129,12 +122,14 @@ router.get('/getRestaurants', function(req, res, next) {
 });
 
 router.post('/getMessages', function(req, res) {
+    console.log(req.body["username"]);
     con.query("SELECT id,sender,orders,complete FROM messages WHERE recipient = '"+req.body["username"]+"'",(err,result)=>{
         if(err) throw err;
         let r = [];
         
         for(let i = 0; i < result.length;i++){
             r.push([result[i]["id"],result[i]["sender"],result[i]["orders"],result[i]["complete"]]);
+            console.log(r[i]);
         }
 
         res.send(r);
@@ -182,8 +177,20 @@ router.post('/order',(req,res)=>{
         });
     });
     console.log(req.body["rest"])
-    
-    
+});
+
+router.post('/postDish',(req,res)=>{
+    let restaurant;
+    con.query("SELECT restaurant FROM restaurants WHERE username = '"+req.body["username"]+"'",(err,result)=>{
+        if(err) {res.send("error");throw err;}
+
+        console.log(result);
+        console.log(result[0]["restaurant"])
+        restaurant = result[0]["restaurant"];
+
+        insertRows("'"+restaurant+"','"+req.body["name"]+"',"+req.body["price"]);
+    }); 
+
 });
 
 module.exports = router;

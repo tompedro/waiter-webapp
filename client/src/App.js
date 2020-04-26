@@ -1,4 +1,4 @@
-import React , { Component } from 'react';
+ import React , { Component } from 'react';
 import logo from './logo.svg';
 import './App.css';
 import Main from './Main';
@@ -15,6 +15,8 @@ class App extends Component {
       this.signIn = this.signIn.bind(this);
       this.getMessages = this.getMessages.bind(this);
       this.order = this.order.bind(this);
+      this.switchLS = this.switchLS.bind(this);
+      this.postDish = this.postDish.bind(this);
     }
 
     order(rest_name,dish_name){
@@ -63,9 +65,11 @@ class App extends Component {
         .then(res => res.text())
         .then((res) => {
           if(res != "error"){
-            this.setState({username:this.refs.logName.value});
+            let n = res[res.length-1];
+            alert(res.substr(0,res.length-1));
+            this.setState({username:res.substr(0,res.length-1)});
 
-            if(res == "1"){
+            if(n == "1"){
               this.setState({isSeller:true});
               alert("sei un venditore");
               this.getMessages();
@@ -106,6 +110,20 @@ class App extends Component {
       }
     }
     
+    switchLS(){
+        this.setState({login:!this.state.login});
+    }
+
+    postDish(name,price){
+      fetch("http://localhost:3000/api/postDish",{
+        method: 'post',
+        headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
+        body : "username=" + this.state.username + "&name=" + name + "&price=" + price
+      })
+          .then(res => res.text())
+          .then(res => alert(res))
+    }
+    
     componentWillMount(){
       this.getRestaurants();
     }
@@ -116,6 +134,10 @@ class App extends Component {
           <header className="App-header">
             WELCOME TO WAITER APP
           </header>
+              <button onClick = {(event) => {
+              event.preventDefault()
+              this.switchLS()
+              }}>LOGIN - SIGNIN</button>
           {
             this.state.init ?
             (this.state.login ?
@@ -170,7 +192,7 @@ class App extends Component {
             <div>
             {
               this.state.done ?
-              <Seller messages = {this.state.messages} />
+              <Seller postDish = {this.postDish} messages = {this.state.messages} />
               :
               <p>IN CARICAMENTO...</p>
             }
