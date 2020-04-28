@@ -1,0 +1,40 @@
+input[type=text]:not(.browser-default):focus:not([readonly]),
+input[type=password]:not(.browser-default):focus:not([readonly]) {
+border-bottom: 1px solid #ff5722;
+-webkit-box-shadow: 0 1px 0 0 #ff5722;
+        box-shadow: 0 1px 0 0 #ff5722;
+}
+[type="radio"]:checked + span:after,
+[type="radio"].with-gap:checked + span:before,
+[type="radio"].with-gap:checked + span:after {
+border: 2px solid #ff5722;
+}
+[type="radio"]:checked + span:after,
+[type="radio"].with-gap:checked + span:after {
+background-color: #ff5722;
+}
+@media only screen and (min-width: 601px) {
+.container {
+    max-width: 85%;
+}
+}
+@media only screen and (min-width: 993px) {
+.container {
+    max-width: 480px;
+}
+}
+.br-1 {
+display: block;
+margin: 1em;
+}
+.br-2 {
+display: block;
+margin: 3em;
+}
+.br-3 {
+display: block;
+margin: 5em;
+}
+form {
+border: 1px solid lightgrey;
+}

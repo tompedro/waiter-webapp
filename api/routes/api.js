@@ -120,7 +120,6 @@ router.get('/getRestaurants', function(req, res, next) {
         res.send(r);
     });
 });
-
 router.post('/getMessages', function(req, res) {
     console.log(req.body["username"]);
     con.query("SELECT id,sender,orders,complete FROM messages WHERE recipient = '"+req.body["username"]+"'",(err,result)=>{

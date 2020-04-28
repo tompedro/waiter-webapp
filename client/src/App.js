@@ -1,13 +1,17 @@
- import React , { Component } from 'react';
+import React , { Component } from 'react';
 import logo from './logo.svg';
-import './App.css';
+import './css/App.css';
+import './css/materialize.min.css';
 import Main from './Main';
 import Seller from './Seller';
+import Login from './login';
+import Signin from './signin';
+import Home from './Home';
 
 class App extends Component {
     constructor(props) {  
       super(props);
-      this.state = { restaurants:[],menus:{},done:false, init:true, login:true,
+      this.state = { restaurants:[],menus:{},done:false, init:true, login:false,signin:false,
                     username : "", isSeller : false, messages : []};
       this.getMenus = this.getMenus.bind(this);
       this.getRestaurants = this.getRestaurants.bind(this);
@@ -15,7 +19,8 @@ class App extends Component {
       this.signIn = this.signIn.bind(this);
       this.getMessages = this.getMessages.bind(this);
       this.order = this.order.bind(this);
-      this.switchLS = this.switchLS.bind(this);
+      this.switchL = this.switchL.bind(this);
+      this.switchS = this.switchS.bind(this);
       this.postDish = this.postDish.bind(this);
     }
 
@@ -110,8 +115,12 @@ class App extends Component {
       }
     }
     
-    switchLS(){
+    switchL(){
         this.setState({login:!this.state.login});
+    }
+
+    switchS(){
+      this.setState({signIn:!this.state.signin});
     }
 
     postDish(name,price){
@@ -129,76 +138,36 @@ class App extends Component {
     }
 
     render(){
+      let form;
+      let page;
+
+      if(this.state.login){
+        form = (<Login/>);
+      }else if(this.state.signin){
+        form = (<Signin/>);
+      }else{
+        form = (<Home Login = {()=> {this.setState({login:true})}} Signin = {()=> {this.setState({signin:true})}}/>);
+      }
+
+      if(this.state.isSeller){
+        page = (<Seller postDish = {this.postDish} messages = {this.state.messages} />);
+      }
+      else{
+        page = (<Main restaurants = {this.state.restaurants} order = {this.order} menus = {this.state.menus}/>);
+      }
+
+      if(!this.state.done){
+        page = (<p>In CARICAMENTO...</p>);
+      }
+
       return (
         <div className="App">
-          <header className="App-header">
-            WELCOME TO WAITER APP
-          </header>
-              <button onClick = {(event) => {
-              event.preventDefault()
-              this.switchLS()
-              }}>LOGIN - SIGNIN</button>
           {
             this.state.init ?
-            (this.state.login ?
-            <div>
-              <form onSubmit={(event) => {
-                event.preventDefault()
-                this.logIn()
-                }}>
-                  <label for="uname"><b>Username</b></label>
-                  <input style = {{width : "133%"}}className = "form-control" type="text" placeholder="Enter Username" ref="logName"/>
-
-                  <label for="psw"><b>Password</b></label>
-                  <input style = {{width : "133%"}}className = "form-control" type="password" placeholder="Enter Password" ref="logPsw"/>
-
-                  <button type="submit" className="btn btn-primary" >Log In</button>
-              </form>
-                    
-            </div>
+            form
             :
-            <div>
-              <form onSubmit={(event) => {
-                event.preventDefault()
-                this.signIn()
-                }}>
-                  <label for="uname"><b>Username</b></label>
-                  <input style = {{width : "133%"}}className = "form-control" type="text" placeholder="Enter Username" ref="uname"/>
-
-                  <label for="psw"><b>Password</b></label>
-                  <input style = {{width : "133%"}}className = "form-control" type="password" placeholder="Enter Password" ref="psw"/>
-
-                  <label for="isSeller"><b>Are you a seller?</b></label>
-                  <input style = {{width : "133%"}} className = "form-control" type="checkbox" ref="cb"/>
-
-                  <label for="uname"><b>Name of Restaurant</b></label>
-                  <input style = {{width : "133%"}}className = "form-control" type="text" placeholder="Enter Name" ref="restname"/>
-              
-                  <button type="submit" className="btn btn-primary" >Sign In</button>
-              </form>
-                    
-            </div>
-            ):
-            (!this.state.isSeller ? 
-            <div>
-            {
-              this.state.done ?
-              <Main restaurants = {this.state.restaurants} order = {this.order} menus = {this.state.menus}/>
-              :
-              <p>IN CARICAMENTO...</p>
-            }
-            </div>
-            :
-            <div>
-            {
-              this.state.done ?
-              <Seller postDish = {this.postDish} messages = {this.state.messages} />
-              :
-              <p>IN CARICAMENTO...</p>
-            }
-            </div>)
+            page
           }
-          
         </div>
             
       );
@@ -206,4 +175,3 @@ class App extends Component {
 }
 
 export default App;
-

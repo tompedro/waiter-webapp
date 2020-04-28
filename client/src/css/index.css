@@ -1,0 +1,9 @@
+.br {
+    display: block;
+    margin: 3em
+  }
+  .card-panel{
+    margin-top: 0;
+    margin-bottom: 50px;
+    padding-top: 0;
+  }
