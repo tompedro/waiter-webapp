@@ -7,6 +7,8 @@ class Main extends Component {
   render() {
     return (
         <div>
+        <h3>Hi {this.props.username}</h3>
+          <h5>Here there are the dishes you can buy : </h5>
         {
           this.props.restaurants.map((rest_name,rest_index)=>
             <div>

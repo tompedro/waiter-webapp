@@ -59,13 +59,13 @@ class App extends Component {
           .then(res => this.setState({ messages: res, done:true})) 
     }
 
-    logIn(){
+    logIn(logNAME,logPSW){
       if(this.state.username === ""){
         fetch("http://localhost:3000/api/login",{
           method: 'post',
           headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
-          body : "name=" + this.refs.logName.value +
-                  "&password=" + this.refs.logPsw.value
+          body : "name=" + logNAME +
+                  "&password=" + logPSW
         })
         .then(res => res.text())
         .then((res) => {
@@ -93,15 +93,16 @@ class App extends Component {
       }
     }
     
-    signIn(){
+    signIn(user,psw,name,isSeller){
+      console.log(user, psw , name ,isSeller);
       if(this.state.username === ""){
         fetch("http://localhost:3000/api/signin",{
           method: 'post',
           headers : {'Content-Type' : 'application/x-www-form-urlencoded'},
-          body : "name=" + this.refs.uname.value +
-                 "&isSeller=" + this.refs.cb.checked.toString()+
-                 "&password=" + this.refs.psw.value+
-                 "&restname=" + this.refs.restname.value
+          body : "name=" + user +
+                 "&isSeller=" + isSeller+
+                 "&password=" + psw+
+                 "&restname=" + name
         })
         .then(res => res.text())
         .then(res => alert(res))
@@ -142,18 +143,18 @@ class App extends Component {
       let page;
 
       if(this.state.login){
-        form = (<Login/>);
+        form = (<Login login = {this.logIn}/>);
       }else if(this.state.signin){
-        form = (<Signin/>);
+        form = (<Signin signin = {this.signIn}/>);
       }else{
         form = (<Home Login = {()=> {this.setState({login:true})}} Signin = {()=> {this.setState({signin:true})}}/>);
       }
 
       if(this.state.isSeller){
-        page = (<Seller postDish = {this.postDish} messages = {this.state.messages} />);
+        page = (<Seller username = {this.state.username} postDish = {this.postDish} messages = {this.state.messages} />);
       }
       else{
-        page = (<Main restaurants = {this.state.restaurants} order = {this.order} menus = {this.state.menus}/>);
+        page = (<Main username = {this.state.username} restaurants = {this.state.restaurants} order = {this.order} menus = {this.state.menus}/>);
       }
 
       if(!this.state.done){

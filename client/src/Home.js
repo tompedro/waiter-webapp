@@ -16,7 +16,7 @@ class Home extends Component {
 
             <div class="container">
             <h4>Cosa è <b>Waiter</b>?</h4>
-            <p>É un semplice sito costruito con HTML, Materialize e altro di cui sa il mio socio, che permette a ristoratori e a tutte le persone confinate in casa a causa del COVID-19 di mettersi in contatto.</p>
+            <p>É un semplice sito costruito con HTML, Materialize, ExpressJS,ReactJS, Docker, MYSQL e AWS, che permette a ristoratori e a tutte le persone confinate in casa a causa del COVID-19 di mettersi in contatto.</p>
             <span class="br-medium"></span>
 
             <h4>Chi siamo?</h4>

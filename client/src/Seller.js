@@ -7,6 +7,7 @@ class Main extends Component {
   render() {
     return (
         <div>
+        <h3>Hi {this.props.username}</h3>
         <form onSubmit={(event)=>{
           event.preventDefault()
           this.props.postDish(this.refs.name.value,this.refs.cost.value)
